@@ -16,10 +16,7 @@ def majority_vote(labels: List[str]) -> str:
                        for count in vote_counts.values()
                        if count == winner_count])
 
-    if num_winners == 1:
-        return winner                     # unique winner, so return it
-    else:
-        return majority_vote(labels[:-1]) # try again without the farthest
+    return winner if num_winners == 1 else majority_vote(labels[:-1])
 
 # Tie, so look at first 4, then 'b'
 assert majority_vote(['a', 'b', 'c', 'b', 'a']) == 'b'

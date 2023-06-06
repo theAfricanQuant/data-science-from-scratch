@@ -6,15 +6,13 @@ points = []
 lat_long_regex = r"<point lat=\"(.*)\" lng=\"(.*)\""
 
 with open("states.txt", "r") as f:
-    lines = [line for line in f]
+    lines = list(f)
 
 for line in lines:
     if line.startswith("</state>"):
-        for p1, p2 in zip(points, points[1:]):
-            segments.append((p1, p2))
+        segments.extend((p1, p2) for p1, p2 in zip(points, points[1:]))
         points = []
-    s = re.search(lat_long_regex, line)
-    if s:
+    if s := re.search(lat_long_regex, line):
         lat, lon = s.groups()
         points.append((float(lon), float(lat)))
 

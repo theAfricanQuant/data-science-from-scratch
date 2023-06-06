@@ -97,8 +97,7 @@ class Table:
 
         for row in self.rows:
             new_row = [row[column] for column in keep_columns]
-            for column_name, calculation in additional_columns.items():
-                new_row.append(calculation(row))
+            new_row.extend(calculation(row) for calculation in additional_columns.values())
             new_table.insert(new_row)
 
         return new_table
@@ -144,8 +143,7 @@ class Table:
         for key, rows in grouped_rows.items():
             if having(rows):
                 new_row = list(key)
-                for aggregate_name, aggregate_fn in aggregates.items():
-                    new_row.append(aggregate_fn(rows))
+                new_row.extend(aggregate_fn(rows) for aggregate_fn in aggregates.values())
                 result_table.insert(new_row)
 
         return result_table

@@ -48,10 +48,9 @@ def scrape(num_pages=31):
         url = base_url + str(page_num)
         soup = BeautifulSoup(requests.get(url).text, 'html5lib')
 
-        for td in soup('td', 'thumbtext'):
-            if not is_video(td):
-                books.append(book_info(td))
-
+        books.extend(
+            book_info(td) for td in soup('td', 'thumbtext') if not is_video(td)
+        )
         # now be a good citizen and respect the robots.txt!
         sleep(30)
 

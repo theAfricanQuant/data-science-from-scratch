@@ -84,10 +84,12 @@ def binomial_histogram(p: float, n: int, num_points: int) -> None:
 
     # use a bar chart to show the actual binomial samples
     histogram = Counter(data)
-    plt.bar([x - 0.4 for x in histogram.keys()],
-            [v / num_points for v in histogram.values()],
-            0.8,
-            color='0.75')
+    plt.bar(
+        [x - 0.4 for x in histogram],
+        [v / num_points for v in histogram.values()],
+        0.8,
+        color='0.75',
+    )
 
     mu = p * n
     sigma = math.sqrt(n * p * (1 - p))

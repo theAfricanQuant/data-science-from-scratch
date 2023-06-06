@@ -114,14 +114,7 @@ def random_y_given_x(x):
     return x + roll_a_die()
 
 def random_x_given_y(y):
-    if y <= 7:
-        # if the total is 7 or less, the first die is equally likely to be
-        # 1, 2, ..., (total - 1)
-        return random.randrange(1, y)
-    else:
-        # if the total is 7 or more, the first die is equally likely to be
-        # (total - 6), (total - 5), ..., 6
-        return random.randrange(y - 6, 7)
+    return random.randrange(1, y) if y <= 7 else random.randrange(y - 6, 7)
 
 def gibbs_sample(num_iters=100):
     x, y = 1, 2 # doesn't really matter
@@ -177,7 +170,7 @@ topic_counts = [0 for _ in range(K)]
 
 document_lengths = [len(d) for d in documents]
 
-distinct_words = set(word for document in documents for word in document)
+distinct_words = {word for document in documents for word in document}
 W = len(distinct_words)
 
 D = len(documents)
@@ -208,8 +201,9 @@ def choose_new_topic(d, word):
 
 
 random.seed(0)
-document_topics = [[random.randrange(K) for word in document]
-                   for document in documents]
+document_topics = [
+    [random.randrange(K) for _ in document] for document in documents
+]
 
 for d in range(D):
     for word, topic in zip(documents[d], document_topics[d]):
@@ -217,7 +211,7 @@ for d in range(D):
         topic_word_counts[topic][word] += 1
         topic_counts[topic] += 1
 
-for iter in range(1000):
+for _ in range(1000):
     for d in range(D):
         for i, (word, topic) in enumerate(zip(documents[d],
                                               document_topics[d])):

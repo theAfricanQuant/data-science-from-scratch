@@ -75,6 +75,7 @@ def make_scatterplot_matrix():
         row[2] = row[0] + row[1] + 5 * random_normal()
         row[3] = 6 if row[2] > -2 else 0
         return row
+
     random.seed(0)
     data = [random_row()
             for _ in range(num_points)]
@@ -89,12 +90,21 @@ def make_scatterplot_matrix():
 
             # scatter column_j on the x-axis vs column_i on the y-axis
             if i != j: ax[i][j].scatter(get_column(data, j), get_column(data, i))
+            else:else
+                ax[i][j].annotate(
+                    f"series {str(i)}",
+                    (0.5, 0.5),
+                    xycoords='axes fraction',
+                    ha="center",
+                    va="center",
+                )
 
-            # unless i == j, in which case show the series name
-            else: ax[i][j].annotate("series " + str(i), (0.5, 0.5),
-                                    xycoords='axes fraction',
-                                    ha="center", va="center")
+                        # then hide axis labels except left and bottom charts
+                        if i < num_columns - 1: ax[i][j].xaxis.set_visible(False)
+                        if j > 0: ax[i][j].yaxis.set_visible(False)
 
+                # fix the bottom right and top left axis labels, which are wrong because
+                # their charts only have text in them
             # then hide axis labels except left and bottom charts
             if i < num_columns - 1: ax[i][j].xaxis.set_visible(False)
             if j > 0: ax[i][j].yaxis.set_visible(False)
@@ -132,10 +142,7 @@ def parse_row(input_row, parsers):
 def try_parse_field(field_name, value, parser_dict):
     """try to parse value using the appropriate function from parser_dict"""
     parser = parser_dict.get(field_name) # None if no such entry
-    if parser is not None:
-        return try_or_none(parser)(value)
-    else:
-        return value
+    return try_or_none(parser)(value) if parser is not None else value
 
 def parse_dict(input_dict, parser_dict):
     return { field_name : try_parse_field(field_name, value, parser_dict)

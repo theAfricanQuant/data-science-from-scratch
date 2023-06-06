@@ -17,10 +17,7 @@ def majority_vote(labels):
                        for count in vote_counts.values()
                        if count == winner_count])
 
-    if num_winners == 1:
-        return winner                     # unique winner, so return it
-    else:
-        return majority_vote(labels[:-1]) # try again without the farthest
+    return winner if num_winners == 1 else majority_vote(labels[:-1])
 
 
 def knn_classify(k, labeled_points, new_point):
@@ -88,7 +85,7 @@ def classify_and_plot_grid(k=1):
 
     plt.legend(loc=0)          # let matplotlib choose the location
     plt.axis([-130,-60,20,55]) # set the axes
-    plt.title(str(k) + "-Nearest Neighbor Programming Languages")
+    plt.title(f"{str(k)}-Nearest Neighbor Programming Languages")
     plt.show()
 
 #

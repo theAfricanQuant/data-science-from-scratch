@@ -12,7 +12,7 @@ def difference_quotient(f: Callable[[float], float],
     return (f(x + h) - f(x)) / h
 
 def square(x: float) -> float:
-    return x * x
+    return x**2
 
 def derivative(x: float) -> float:
     return 2 * x
@@ -43,8 +43,7 @@ def linear_gradient(x: float, y: float, theta: Vector) -> Vector:
     predicted = slope * x + intercept    # The prediction of the model.
     error = (predicted - y)              # error is (predicted - actual)
     squared_error = error ** 2           # We'll minimize squared error
-    grad = [2 * error * x, 2 * error]    # using its gradient.
-    return grad
+    return [2 * error * x, 2 * error]
 
 from typing import TypeVar, List, Iterator
 
@@ -55,7 +54,7 @@ def minibatches(dataset: List[T],
                 shuffle: bool = True) -> Iterator[List[T]]:
     """Generates `batch_size`-sized minibatches from the dataset"""
     # Start indexes 0, batch_size, 2 * batch_size, ...
-    batch_starts = [start for start in range(0, len(dataset), batch_size)]
+    batch_starts = list(range(0, len(dataset), batch_size))
 
     if shuffle: random.shuffle(batch_starts)  # shuffle the batches
 

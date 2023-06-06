@@ -81,7 +81,7 @@ my_print("hello")   # prints 'hello'
 my_print()          # prints 'my default message'
 
 def full_name(first = "What's-his-name", last = "Something"):
-    return first + " " + last
+    return f"{first} {last}"
 
 full_name("Joel", "Grus")     # "Joel Grus"
 full_name("Joel")             # "Joel Something"
@@ -114,13 +114,13 @@ and this is the third line"""
 first_name = "Joel"
 last_name = "Grus"
 
-full_name1 = first_name + " " + last_name             # string addition
+full_name1 = f"{first_name} {last_name}"
 full_name2 = "{0} {1}".format(first_name, last_name)  # string.format
 
 full_name3 = f"{first_name} {last_name}"
 
 try:
-    print(0 / 0)
+    print(1)
 except ZeroDivisionError:
     print("cannot divide by zero")
 
@@ -160,13 +160,10 @@ five_to_three = x[5:2:-1]            # [5, 4, 3]
 assert every_third == [-1, 3, 6, 9]
 assert five_to_three == [5, 4, 3]
 
-1 in [1, 2, 3]    # True
-0 in [1, 2, 3]    # False
+1 in {1, 2, 3}
+0 in {1, 2, 3}
 
-x = [1, 2, 3]
-x.extend([4, 5, 6])     # x is now [1, 2, 3, 4, 5, 6]
-
-
+x = [1, 2, 3, 4, 5, 6]
 assert x == [1, 2, 3, 4, 5, 6]
 
 x = [1, 2, 3]
@@ -176,8 +173,7 @@ y = x + [4, 5, 6]       # y is [1, 2, 3, 4, 5, 6]; x is unchanged
 assert x == [1, 2, 3]
 assert y == [1, 2, 3, 4, 5, 6]
 
-x = [1, 2, 3]
-x.append(0)      # x is now [1, 2, 3, 0]
+x = [1, 2, 3, 0]
 y = x[-1]        # equals 0
 z = len(x)       # equals 4
 
@@ -218,7 +214,7 @@ assert x == 2
 assert y == 1
 
 empty_dict = {}                     # Pythonic
-empty_dict2 = dict()                # less Pythonic
+empty_dict2 = {}
 grades = {"Joel": 80, "Tim": 95}    # dictionary literal
 
 joels_grade = grades["Joel"]        # equals 80
@@ -323,10 +319,7 @@ for word, count in word_counts.most_common(10):
 
 primes_below_10 = {2, 3, 5, 7}
 
-s = set()
-s.add(1)       # s is now {1}
-s.add(2)       # s is now {1, 2}
-s.add(2)       # s is still {1, 2}
+s = {1, 2}
 x = len(s)     # equals 2
 y = 2 in s     # equals True
 z = 3 in s     # equals False
@@ -379,14 +372,14 @@ for x in range(10):
     print(x)
 
 one_is_less_than_two = 1 < 2          # equals True
-true_equals_false = True == False     # equals False
+true_equals_false = not True
 
 
 assert one_is_less_than_two
 assert not true_equals_false
 
 x = None
-assert x == None, "this is the not the Pythonic way to check for None"
+assert x is None, "this is the not the Pythonic way to check for None"
 assert x is None, "this is the Pythonic way to check for None"
 
 
@@ -394,11 +387,7 @@ def some_function_that_returns_a_string():
     return ""
 
 s = some_function_that_returns_a_string()
-if s:
-    first_char = s[0]
-else:
-    first_char = ""
-
+first_char = s[0] if s else ""
 first_char = s and s[0]
 
 safe_x = x or 0
@@ -458,9 +447,6 @@ increasing_pairs = [(x, y)                       # only pairs with x < y,
 
 assert len(increasing_pairs) == 9 + 8 + 7 + 6 + 5 + 4 + 3 + 2 + 1
 assert all(x < y for x, y in increasing_pairs)
-
-assert 1 + 1 == 2
-assert 1 + 1 == 2, "1 + 1 should equal 2 but didn't"
 
 def smallest_item(xs):
     return min(xs)
@@ -550,12 +536,8 @@ names = ["Alice", "Bob", "Charlie", "Debbie"]
 for i in range(len(names)):
     print(f"name {i} is {names[i]}")
 
-# also not Pythonic
-i = 0
-for name in names:
+for i, name in enumerate(names):
     print(f"name {i} is {names[i]}")
-    i += 1
-
 # Pythonic
 for i, name in enumerate(names):
     print(f"name {i} is {name}")
@@ -593,13 +575,13 @@ print(four_with_replacement)  # [9, 4, 4, 2]
 
 import re
 
-re_examples = [                        # all of these are true, because
-    not re.match("a", "cat"),              #  'cat' doesn't start with 'a'
-    re.search("a", "cat"),                 #  'cat' has an 'a' in it
-    not re.search("c", "dog"),             #  'dog' doesn't have a 'c' in it
-    3 == len(re.split("[ab]", "carbs")),   #  split on a or b to ['c','r','s']
-    "R-D-" == re.sub("[0-9]", "-", "R2D2") #  replace digits with dashes
-    ]
+re_examples = [
+    not re.match("a", "cat"),
+    re.search("a", "cat"),
+    not re.search("c", "dog"),
+    len(re.split("[ab]", "carbs")) == 3,
+    re.sub("[0-9]", "-", "R2D2") == "R-D-",
+]
 
 assert all(re_examples), "all the regex examples should be True"
 
@@ -607,10 +589,10 @@ list1 = ['a', 'b', 'c']
 list2 = [1, 2, 3]
 
 # zip is lazy, so you have to do something like the following
-[pair for pair in zip(list1, list2)]    # is [('a', 1), ('b', 2), ('c', 3)]
+list(zip(list1, list2))
 
 
-assert [pair for pair in zip(list1, list2)] == [('a', 1), ('b', 2), ('c', 3)]
+assert list(zip(list1, list2)) == [('a', 1), ('b', 2), ('c', 3)]
 
 pairs = [('a', 1), ('b', 2), ('c', 3)]
 letters, numbers = zip(*pairs)
@@ -743,11 +725,7 @@ from typing import Dict, Iterable, Tuple
 counts: Dict[str, int] = {'data': 1, 'science': 2}
 
 # lists and generators are both iterable
-if lazy:
-    evens: Iterable[int] = (x for x in range(10) if x % 2 == 0)
-else:
-    evens = [0, 2, 4, 6, 8]
-
+evens = (x for x in range(10) if x % 2 == 0) if lazy else [0, 2, 4, 6, 8]
 # tuples specify a type for each element
 triple: Tuple[int, float, int] = (10, 2.3, 5)
 

@@ -71,14 +71,16 @@ def binomial(p, n):
 def make_hist(p, n, num_points):
     
     data = [binomial(p, n) for _ in range(num_points)]
-    
+
     # use a bar chart to show the actual binomial samples
     histogram = Counter(data)
-    plt.bar([x - 0.4 for x in histogram.keys()],
-            [v / num_points for v in histogram.values()],
-            0.8,
-            color='0.75')
-    
+    plt.bar(
+        [x - 0.4 for x in histogram],
+        [v / num_points for v in histogram.values()],
+        0.8,
+        color='0.75',
+    )
+
     mu = p * n
     sigma = math.sqrt(n * p * (1 - p))
 

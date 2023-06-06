@@ -357,16 +357,15 @@ class Relu(Layer):
 
 def softmax(tensor: Tensor) -> Tensor:
     """Softmax along the last dimension"""
-    if is_1d(tensor):
-        # Subtract largest value for numerical stabilitity.
-        largest = max(tensor)
-        exps = [math.exp(x - largest) for x in tensor]
-
-        sum_of_exps = sum(exps)                 # This is the total "weight".
-        return [exp_i / sum_of_exps             # Probability is the fraction
-                for exp_i in exps]              # of the total weight.
-    else:
+    if not is_1d(tensor):
         return [softmax(tensor_i) for tensor_i in tensor]
+    # Subtract largest value for numerical stabilitity.
+    largest = max(tensor)
+    exps = [math.exp(x - largest) for x in tensor]
+
+    sum_of_exps = sum(exps)                 # This is the total "weight".
+    return [exp_i / sum_of_exps             # Probability is the fraction
+            for exp_i in exps]              # of the total weight.
 
 
 class SoftmaxCrossEntropy(Loss):
@@ -402,17 +401,16 @@ class Dropout(Layer):
         self.train = True
 
     def forward(self, input: Tensor) -> Tensor:
-        if self.train:
-            # Create a mask of 0s and 1s shaped like the input
-            # using the specified probability.
-            self.mask = tensor_apply(
-                lambda _: 0 if random.random() < self.p else 1,
-                input)
-            # Multiply by the mask to dropout inputs.
-            return tensor_combine(operator.mul, input, self.mask)
-        else:
+        if not self.train:
             # During evaluation just scale down the outputs uniformly.
             return tensor_apply(lambda x: x * (1 - self.p), input)
+        # Create a mask of 0s and 1s shaped like the input
+        # using the specified probability.
+        self.mask = tensor_apply(
+            lambda _: 0 if random.random() < self.p else 1,
+            input)
+        # Multiply by the mask to dropout inputs.
+        return tensor_combine(operator.mul, input, self.mask)
 
     def backward(self, gradient: Tensor) -> Tensor:
         if self.train:

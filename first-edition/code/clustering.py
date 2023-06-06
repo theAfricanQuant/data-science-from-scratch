@@ -17,10 +17,10 @@ class KMeans:
                    key=lambda i: squared_distance(input, self.means[i]))
                    
     def train(self, inputs):
-    
+
         self.means = random.sample(inputs, self.k)
         assignments = None
-        
+
         while True:
             # Find new assignments
             new_assignments = map(self.classify, inputs)
@@ -33,9 +33,7 @@ class KMeans:
             assignments = new_assignments    
 
             for i in range(self.k):
-                i_points = [p for p, a in zip(inputs, assignments) if a == i]
-                # avoid divide-by-zero if i_points is empty
-                if i_points:                                
+                if i_points := [p for p, a in zip(inputs, assignments) if a == i]:
                     self.means[i] = vector_mean(i_points)    
 
 def squared_clustering_errors(inputs, k):
@@ -115,10 +113,7 @@ def cluster_distance(cluster1, cluster2, distance_agg=min):
                         for input2 in get_values(cluster2)])
 
 def get_merge_order(cluster):
-    if is_leaf(cluster):
-        return float('inf')
-    else:
-        return cluster[0] # merge_order is first element of 2-tuple
+    return float('inf') if is_leaf(cluster) else cluster[0]
 
 def bottom_up_cluster(inputs, distance_agg=min):
     # start with every input a leaf cluster / 1-tuple

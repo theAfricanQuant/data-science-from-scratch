@@ -73,10 +73,12 @@ def make_hist(p, n, num_points):
 
     # use a bar chart to show the actual binomial samples
     histogram = Counter(data)
-    plt.bar([x - 0.4 for x in histogram.keys()],
-            [v / num_points for v in histogram.values()],
-            0.8,
-            color='0.75')
+    plt.bar(
+        [x - 0.4 for x in histogram],
+        [v / num_points for v in histogram.values()],
+        0.8,
+        color='0.75',
+    )
 
     mu = p * n
     sigma = math.sqrt(n * p * (1 - p))
@@ -106,8 +108,8 @@ if __name__ == "__main__":
         older = random_kid()
         if older == "girl":
             older_girl += 1
-        if older == "girl" and younger == "girl":
-            both_girls += 1
+            if younger == "girl":
+                both_girls += 1
         if older == "girl" or younger == "girl":
             either_girl += 1
 

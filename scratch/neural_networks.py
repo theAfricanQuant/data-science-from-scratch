@@ -129,7 +129,7 @@ assert fizz_buzz_encode(30) == [0, 0, 0, 1]
 def binary_encode(x: int) -> Vector:
     binary: List[float] = []
 
-    for i in range(10):
+    for _ in range(10):
         binary.append(x % 2)
         x = x // 2
 
@@ -153,11 +153,11 @@ assert argmax([-1, 10, 5, 20, -3]) == 3   # items[3] is largest
 def main():
     import random
     random.seed(0)
-    
+
     # training data
     xs = [[0., 0], [0., 1], [1., 0], [1., 1]]
     ys = [[0.], [1.], [1.], [0.]]
-    
+
     # start with random weights
     network = [ # hidden layer: 2 inputs -> 2 outputs
                 [[random.random() for _ in range(2 + 1)],   # 1st hidden neuron
@@ -165,72 +165,72 @@ def main():
                 # output layer: 2 inputs -> 1 output
                 [[random.random() for _ in range(2 + 1)]]   # 1st output neuron
               ]
-    
+
     from scratch.gradient_descent import gradient_step
     import tqdm
-    
+
     learning_rate = 1.0
-    
-    for epoch in tqdm.trange(20000, desc="neural net for xor"):
+
+    for _ in tqdm.trange(20000, desc="neural net for xor"):
         for x, y in zip(xs, ys):
             gradients = sqerror_gradients(network, x, y)
-    
+
             # Take a gradient step for each neuron in each layer
             network = [[gradient_step(neuron, grad, -learning_rate)
                         for neuron, grad in zip(layer, layer_grad)]
                        for layer, layer_grad in zip(network, gradients)]
-    
+
     # check that it learned XOR
     assert feed_forward(network, [0, 0])[-1][0] < 0.01
     assert feed_forward(network, [0, 1])[-1][0] > 0.99
     assert feed_forward(network, [1, 0])[-1][0] > 0.99
     assert feed_forward(network, [1, 1])[-1][0] < 0.01
-    
+
     xs = [binary_encode(n) for n in range(101, 1024)]
     ys = [fizz_buzz_encode(n) for n in range(101, 1024)]
-    
+
     NUM_HIDDEN = 25
-    
+
     network = [
         # hidden layer: 10 inputs -> NUM_HIDDEN outputs
         [[random.random() for _ in range(10 + 1)] for _ in range(NUM_HIDDEN)],
-    
+
         # output_layer: NUM_HIDDEN inputs -> 4 outputs
         [[random.random() for _ in range(NUM_HIDDEN + 1)] for _ in range(4)]
     ]
-    
+
     from scratch.linear_algebra import squared_distance
-    
+
     learning_rate = 1.0
-    
+
     with tqdm.trange(500) as t:
         for epoch in t:
             epoch_loss = 0.0
-    
+
             for x, y in zip(xs, ys):
                 predicted = feed_forward(network, x)[-1]
                 epoch_loss += squared_distance(predicted, y)
                 gradients = sqerror_gradients(network, x, y)
-    
+
                 # Take a gradient step for each neuron in each layer
                 network = [[gradient_step(neuron, grad, -learning_rate)
                             for neuron, grad in zip(layer, layer_grad)]
                         for layer, layer_grad in zip(network, gradients)]
-    
+
             t.set_description(f"fizz buzz (loss: {epoch_loss:.2f})")
-    
+
     num_correct = 0
-    
+
     for n in range(1, 101):
         x = binary_encode(n)
         predicted = argmax(feed_forward(network, x)[-1])
         actual = argmax(fizz_buzz_encode(n))
         labels = [str(n), "fizz", "buzz", "fizzbuzz"]
         print(n, labels[predicted], labels[actual])
-    
+
         if predicted == actual:
             num_correct += 1
-    
+
     print(num_correct, "/", 100)
     
 if __name__ == "__main__": main()

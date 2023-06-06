@@ -3,9 +3,6 @@ import sys
 
 if __name__ == "__main__":
 
-    count = 0
-    for line in sys.stdin:
-        count += 1
-
+    count = sum(1 for _ in sys.stdin)
     # print goes to sys.stdout
     print(count)

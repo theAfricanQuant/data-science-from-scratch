@@ -163,7 +163,7 @@ def least_squares_fit_ridge(xs: List[Vector],
     # Start guess with mean
     guess = [random.random() for _ in xs[0]]
 
-    for i in range(num_steps):
+    for _ in range(num_steps):
         for start in range(0, len(xs), batch_size):
             batch_xs = xs[start:start+batch_size]
             batch_ys = ys[start:start+batch_size]

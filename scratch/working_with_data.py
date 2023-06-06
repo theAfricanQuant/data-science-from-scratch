@@ -70,12 +70,12 @@ assert correlation_matrix(vectors) == [
 
 import datetime
 
-stock_price = {'closing_price': 102.06,
-               'date': datetime.date(2014, 8, 29),
-               'symbol': 'AAPL'}
-
-# oops, typo
-stock_price['cosing_price'] = 103.06
+stock_price = {
+    'closing_price': 102.06,
+    'date': datetime.date(2014, 8, 29),
+    'symbol': 'AAPL',
+    'cosing_price': 103.06,
+}
 
 prices: Dict[datetime.date, float] = {}
 
@@ -536,11 +536,18 @@ def main():
 
             # Scatter column_j on the x-axis vs column_i on the y-axis,
             if i != j: ax[i][j].scatter(corr_data[j], corr_data[i])
+            else:else
+                ax[i][j].annotate(
+                    f"series {str(i)}",
+                    (0.5, 0.5),
+                    xycoords='axes fraction',
+                    ha="center",
+                    va="center",
+                )
 
-            # unless i == j, in which case show the series name.
-            else: ax[i][j].annotate("series " + str(i), (0.5, 0.5),
-                                    xycoords='axes fraction',
-                                    ha="center", va="center")
+                        # Then hide axis labels except left and bottom charts
+                        if i < num_vectors - 1: ax[i][j].xaxis.set_visible(False)
+                        if j > 0: ax[i][j].yaxis.set_visible(False)
 
             # Then hide axis labels except left and bottom charts
             if i < num_vectors - 1: ax[i][j].xaxis.set_visible(False)
@@ -581,7 +588,7 @@ def main():
         with tqdm.trange(3, n) as t:
             for i in t:
                 # i is prime if no smaller prime divides it.
-                i_is_prime = not any(i % p == 0 for p in primes)
+                i_is_prime = all(i % p != 0 for p in primes)
                 if i_is_prime:
                     primes.append(i)
 

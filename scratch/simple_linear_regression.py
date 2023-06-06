@@ -27,7 +27,7 @@ def least_squares_fit(x: Vector, y: Vector) -> Tuple[float, float]:
     alpha = mean(y) - beta * mean(x)
     return alpha, beta
 
-x = [i for i in range(-100, 110, 10)]
+x = list(range(-100, 110, 10))
 y = [3 * i - 5 for i in x]
 
 # Should find that y = 3x - 5

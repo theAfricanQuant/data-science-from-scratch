@@ -173,7 +173,7 @@ def page_rank(users: List[User],
     # Small fraction of PageRank that each node gets each iteration
     base_pr = (1 - damping) / num_users
 
-    for iter in tqdm.trange(num_iters):
+    for _ in tqdm.trange(num_iters):
         next_pr = {user.id : base_pr for user in users}  # start with base_pr
 
         for source, target in endorsements:

@@ -41,8 +41,10 @@ class Table:
 
         for row in self.rows:
             new_row = [row[column] for column in keep_columns]
-            for column_name, calculation in additional_columns.iteritems():
-                new_row.append(calculation(row))
+            new_row.extend(
+                calculation(row)
+                for column_name, calculation in additional_columns.iteritems()
+            )
             result_table.insert(new_row)
 
         return result_table
@@ -75,8 +77,10 @@ class Table:
         for key, rows in grouped_rows.iteritems():
             if having is None or having(rows):
                 new_row = list(key)
-                for aggregate_name, aggregate_fn in aggregates.iteritems():
-                    new_row.append(aggregate_fn(rows))
+                new_row.extend(
+                    aggregate_fn(rows)
+                    for aggregate_name, aggregate_fn in aggregates.iteritems()
+                )
                 result_table.insert(new_row)
 
         return result_table

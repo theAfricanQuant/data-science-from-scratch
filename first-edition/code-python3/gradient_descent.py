@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
     print("using the gradient")
 
-    v = [random.randint(-10,10) for i in range(3)]
+    v = [random.randint(-10,10) for _ in range(3)]
 
     tolerance = 0.0000001
 
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
     print("using minimize_batch")
 
-    v = [random.randint(-10,10) for i in range(3)]
+    v = [random.randint(-10,10) for _ in range(3)]
 
     v = minimize_batch(sum_of_squares, sum_of_squares_gradient, v)
 
